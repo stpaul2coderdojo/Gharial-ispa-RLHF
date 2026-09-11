@@ -253,18 +253,27 @@ export const ISPASentenceComposer: React.FC<ISPASentenceComposerProps> = ({
             {adultDisplayTokens.map((tok) => {
               const def = ISPA_VOCABULARY[tok];
               return (
-                <button
+                <div
                   key={tok}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => addToken(tok)}
-                  className="flex flex-col p-2 rounded-lg bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all duration-150 group"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      addToken(tok);
+                    }
+                  }}
+                  className="flex flex-col p-2 rounded-lg bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all duration-150 group cursor-pointer select-none focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-bold text-white text-xs px-1.5 py-0.5 rounded bg-slate-800 group-hover:bg-emerald-950 group-hover:text-emerald-300">
                       {tok}
                     </span>
                     <button
+                      type="button"
                       onClick={(e) => playSingleToken(e, tok)}
-                      className="text-slate-500 hover:text-emerald-400 p-0.5"
+                      className="text-slate-500 hover:text-emerald-400 p-0.5 rounded hover:bg-slate-800 transition-colors"
                       title="Preview sound"
                     >
                       <Volume2 className="w-3 h-3" />
@@ -272,7 +281,7 @@ export const ISPASentenceComposer: React.FC<ISPASentenceComposerProps> = ({
                   </div>
                   <span className="text-xs font-medium text-slate-200 truncate">{def.name}</span>
                   <span className="text-[10px] text-slate-400 truncate">{def.soundDescription}</span>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -287,18 +296,27 @@ export const ISPASentenceComposer: React.FC<ISPASentenceComposerProps> = ({
             {juvenileTokens.map((tok) => {
               const def = ISPA_VOCABULARY[tok];
               return (
-                <button
+                <div
                   key={tok}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => addToken(tok)}
-                  className="flex flex-col p-2 rounded-lg bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all duration-150 group"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      addToken(tok);
+                    }
+                  }}
+                  className="flex flex-col p-2 rounded-lg bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all duration-150 group cursor-pointer select-none focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-bold text-white text-xs px-1.5 py-0.5 rounded bg-slate-800 group-hover:bg-emerald-950 group-hover:text-emerald-300">
                       {tok}
                     </span>
                     <button
+                      type="button"
                       onClick={(e) => playSingleToken(e, tok)}
-                      className="text-slate-500 hover:text-emerald-400 p-0.5"
+                      className="text-slate-500 hover:text-emerald-400 p-0.5 rounded hover:bg-slate-800 transition-colors"
                       title="Preview sound"
                     >
                       <Volume2 className="w-3 h-3" />
@@ -306,7 +324,7 @@ export const ISPASentenceComposer: React.FC<ISPASentenceComposerProps> = ({
                   </div>
                   <span className="text-xs font-medium text-slate-200 truncate">{def.name}</span>
                   <span className="text-[10px] text-slate-400 truncate">{def.soundDescription}</span>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -321,18 +339,27 @@ export const ISPASentenceComposer: React.FC<ISPASentenceComposerProps> = ({
             {[...agonisticWarningTokens, ...courtshipTokens].map((tok) => {
               const def = ISPA_VOCABULARY[tok];
               return (
-                <button
+                <div
                   key={tok}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => addToken(tok)}
-                  className="flex flex-col p-2 rounded-lg bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all duration-150 group"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      addToken(tok);
+                    }
+                  }}
+                  className="flex flex-col p-2 rounded-lg bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all duration-150 group cursor-pointer select-none focus:outline-none focus:ring-1 focus:ring-emerald-500"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-bold text-white text-xs px-1.5 py-0.5 rounded bg-slate-800 group-hover:bg-emerald-950 group-hover:text-emerald-300">
                       {tok}
                     </span>
                     <button
+                      type="button"
                       onClick={(e) => playSingleToken(e, tok)}
-                      className="text-slate-500 hover:text-emerald-400 p-0.5"
+                      className="text-slate-500 hover:text-emerald-400 p-0.5 rounded hover:bg-slate-800 transition-colors"
                       title="Preview sound"
                     >
                       <Volume2 className="w-3 h-3" />
@@ -340,7 +367,7 @@ export const ISPASentenceComposer: React.FC<ISPASentenceComposerProps> = ({
                   </div>
                   <span className="text-xs font-medium text-slate-200 truncate">{def.name}</span>
                   <span className="text-[10px] text-slate-400 truncate">{def.soundDescription}</span>
-                </button>
+                </div>
               );
             })}
           </div>
