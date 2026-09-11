@@ -1,6 +1,7 @@
 import React from 'react';
 import { Radio, Volume2, VolumeX, ShieldCheck, Activity, Info } from 'lucide-react';
 import { SparrowStreamChannel } from '../types';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface HeaderProps {
   channels: SparrowStreamChannel[];
@@ -101,6 +102,8 @@ export const Header: React.FC<HeaderProps> = ({
             <Info className="w-3.5 h-3.5 text-sky-400" />
             <span>13 ISPA Tokens</span>
           </button>
+
+          <PWAInstallButton />
 
           <button
             id="toggle-audio-mute-btn"

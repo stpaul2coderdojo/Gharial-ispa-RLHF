@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wilderness Dojo — Gharial ISPA Bioacoustics & RLHF</title>
+  <meta name="description" content="Interspecies Phonetic Alphabet (ISPA) Annotation & RLHF Feedback Pipeline for Critically Endangered Gharials at Madras Crocodile Bank Trust (MCBT).">
+  
+  <!-- WebAPK / PWA Meta -->
+  <meta name="theme-color" content="#064e3b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Wilderness Dojo — Gharial ISPA Bioacoustic Telemetry">
+  <meta property="og:description" content="RLHF Bioacoustic Workbench for Gharial Interspecies Phonetic Alphabet with Microsoft Sparrow telemetry at MCBT.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wildernessdojo.github.io">
+
+  <!-- Tailwind CSS CDN & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.05); }
+    }
+    .glow-bg {
+      animation: pulseGlow 6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- Navigation Bar -->
+  <nav class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 0-10 10c0 5.523 4.477 10 10 10s10-4.477 10-10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-bold text-white tracking-wide text-sm sm:text-base">WILDERNESS DOJO</span>
+          <span class="text-xs text-emerald-400 block -mt-1 font-mono">wildernessdojo.github.io</span>
+        </div>
+      </div>
+
+      <div class="hidden md:flex items-center gap-6 text-xs font-medium text-slate-300">
+        <a href="#overview" class="hover:text-emerald-400 transition-colors">Overview</a>
+        <a href="#ispa-tokens" class="hover:text-emerald-400 transition-colors">ISPA Tokens</a>
+        <a href="#webapk" class="hover:text-emerald-400 transition-colors">WebAPK</a>
+        <a href="#docker" class="hover:text-emerald-400 transition-colors">Docker</a>
+        <a href="#mcbt" class="hover:text-emerald-400 transition-colors">MCBT Station</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a
+          href="https://ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app"
+          target="_blank"
+          rel="noreferrer"
+          class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition shadow-sm hover:shadow-emerald-500/20"
+        >
+          <span>Launch Cloud App</span>
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 border-b border-slate-800/80">
+    <div class="absolute inset-0 pointer-events-none -z-10 flex items-center justify-center">
+      <div class="w-[600px] h-[600px] rounded-full bg-emerald-500/10 blur-3xl glow-bg"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <!-- Live Status Badge -->
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-mono mb-6">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span class="font-semibold tracking-wider">LIVE CLOUD BUILD OPERATIONAL</span>
+        <span class="text-slate-500">•</span>
+        <span class="text-slate-400">MCBT SENSORS ACTIVE</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight sm:leading-none">
+        Decoding the Language of <br class="hidden sm:inline">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300">
+          Critically Endangered Gharials
+        </span>
+      </h1>
+
+      <p class="mt-6 text-base sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed">
+        An edge-AI bioacoustic observation workbench combining the <strong>Gharial Interspecies Phonetic Alphabet (ISPA)</strong>, 
+        <strong>Microsoft Sparrow</strong> hydrophone telemetry, and human-in-the-loop <strong>RLHF</strong> annotation at the 
+        <strong>Madras Crocodile Bank Trust (MCBT)</strong>.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a
+          href="https://ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app"
+          target="_blank"
+          rel="noreferrer"
+          class="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all shadow-lg hover:shadow-emerald-500/25"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Launch Live Cloud App
+        </a>
+
+        <a
+          href="#webapk"
+          class="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-sm transition"
+        >
+          <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+            <line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+          Install Android WebAPK
+        </a>
+
+        <a
+          href="#docker"
+          class="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 font-semibold text-sm transition"
+        >
+          <svg class="w-4 h-4 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 16v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Deploy with Docker
+        </a>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 text-center">
+          <div class="text-2xl font-bold text-emerald-400 font-mono">13</div>
+          <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider">ISPA Phonemes</div>
+        </div>
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 text-center">
+          <div class="text-2xl font-bold text-amber-400 font-mono">6–18 Hz</div>
+          <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Infrasonic Torso Waves</div>
+        </div>
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 text-center">
+          <div class="text-2xl font-bold text-sky-400 font-mono">MCBT</div>
+          <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Field Research Base</div>
+        </div>
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800/80 text-center">
+          <div class="text-2xl font-bold text-teal-400 font-mono">RLHF</div>
+          <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Human-in-the-Loop</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Interactive ISPA Phoneme Synthesizer Section -->
+  <section id="ispa-tokens" class="py-16 border-b border-slate-800 bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+        <div>
+          <span class="text-emerald-400 text-xs font-mono font-bold tracking-widest uppercase">Bioacoustic Synthesizer</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Gharial Phonetic Repertoire (ISPA)</h2>
+          <p class="text-sm text-slate-400 mt-1">Click any token to audition the physiological acoustic signature synthesized via Web Audio API.</p>
+        </div>
+        <div class="mt-4 md:mt-0 text-xs text-slate-400 font-mono">
+          *Calibrated to adult male ghara resonance & hatchling creche acoustics
+        </div>
+      </div>
+
+      <!-- Token Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Token 1: POP -->
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition cursor-pointer group" onclick="playAcoustic('POP')">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 font-mono font-bold text-sm border border-emerald-800/80">POP</span>
+            <span class="text-xs font-mono text-slate-400">40–180 Hz</span>
+          </div>
+          <h3 class="font-bold text-white text-sm mt-3 group-hover:text-emerald-400 transition">Bubble Pop / Ghara Cavitation</h3>
+          <p class="text-xs text-slate-400 mt-1">Explosive jaw snap causing underwater cavitation bubble-pop amplified by the cartilaginous ghara.</p>
+          <div class="mt-3 flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Audition Sound</span>
+          </div>
+        </div>
+
+        <!-- Token 2: SAV -->
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition cursor-pointer group" onclick="playAcoustic('SAV')">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-amber-950 text-amber-300 font-mono font-bold text-sm border border-amber-800/80">SAV</span>
+            <span class="text-xs font-mono text-slate-400">6–18 Hz (Infrasound)</span>
+          </div>
+          <h3 class="font-bold text-white text-sm mt-3 group-hover:text-amber-400 transition">Sub-Audible Torso Vibration</h3>
+          <p class="text-xs text-slate-400 mt-1">Courtship torso dance producing sub-surface infrasound and Faraday water ripples across the back.</p>
+          <div class="mt-3 flex items-center gap-1.5 text-xs text-amber-400 font-medium">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Audition Sound</span>
+          </div>
+        </div>
+
+        <!-- Token 3: BR -->
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition cursor-pointer group" onclick="playAcoustic('BR')">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 font-mono font-bold text-sm border border-emerald-800/80">BR</span>
+            <span class="text-xs font-mono text-slate-400">120–340 Hz</span>
+          </div>
+          <h3 class="font-bold text-white text-sm mt-3 group-hover:text-emerald-400 transition">Resonant Bellow-Roar</h3>
+          <p class="text-xs text-slate-400 mt-1">Long-distance territorial advertisement bellow channeled through the male snout appendage.</p>
+          <div class="mt-3 flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Audition Sound</span>
+          </div>
+        </div>
+
+        <!-- Token 4: JQU -->
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition cursor-pointer group" onclick="playAcoustic('JQU')">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-sky-950 text-sky-300 font-mono font-bold text-sm border border-sky-800/80">JQU</span>
+            <span class="text-xs font-mono text-slate-400">800–2200 Hz</span>
+          </div>
+          <h3 class="font-bold text-white text-sm mt-3 group-hover:text-sky-400 transition">Juvenile Creche Quack</h3>
+          <p class="text-xs text-slate-400 mt-1">Rapid contact call emitted by hatchlings to coordinate group clustering under adult male protection.</p>
+          <div class="mt-3 flex items-center gap-1.5 text-xs text-sky-400 font-medium">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Audition Sound</span>
+          </div>
+        </div>
+
+        <!-- Token 5: HAP -->
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition cursor-pointer group" onclick="playAcoustic('HAP')">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-rose-950 text-rose-300 font-mono font-bold text-sm border border-rose-800/80">HAP</span>
+            <span class="text-xs font-mono text-slate-400">30–260 Hz</span>
+          </div>
+          <h3 class="font-bold text-white text-sm mt-3 group-hover:text-rose-400 transition">Head-Slap Acoustic Shock</h3>
+          <p class="text-xs text-slate-400 mt-1">Explosive downward head strike onto water producing a wideband acoustic shockwave.</p>
+          <div class="mt-3 flex items-center gap-1.5 text-xs text-rose-400 font-medium">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Audition Sound</span>
+          </div>
+        </div>
+
+        <!-- Token 6: PIP -->
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition cursor-pointer group" onclick="playAcoustic('PIP')">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded bg-indigo-950 text-indigo-300 font-mono font-bold text-sm border border-indigo-800/80">PIP</span>
+            <span class="text-xs font-mono text-slate-400">1200–3500 Hz</span>
+          </div>
+          <h3 class="font-bold text-white text-sm mt-3 group-hover:text-indigo-400 transition">Hatching Emergence Pip</h3>
+          <p class="text-xs text-slate-400 mt-1">Emitted from inside eggs buried in sandbank nests to cue synchronous hatching.</p>
+          <div class="mt-3 flex items-center gap-1.5 text-xs text-indigo-400 font-medium">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Audition Sound</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WebAPK Section -->
+  <section id="webapk" class="py-16 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span class="text-emerald-400 text-xs font-mono font-bold tracking-widest uppercase">Progressive Web App</span>
+          <h2 class="text-3xl font-bold text-white mt-1">Native Android WebAPK Minting</h2>
+          <p class="text-sm text-slate-300 mt-4 leading-relaxed">
+            The application is configured as a standalone Progressive Web App compliant with Google Play's 
+            <strong>WebAPK minting service</strong>. When installed on Android devices running Chrome or Chromium browsers, 
+            the system automatically wraps the PWA into a native Android APK with:
+          </p>
+
+          <ul class="mt-6 space-y-3 text-sm text-slate-300">
+            <li class="flex items-start gap-3">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</span>
+              <span><strong>Hardware-Accelerated Audio:</strong> Direct low-latency Web Audio API access for hydrophone telemetry without browser chrome.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</span>
+              <span><strong>Offline Hydrophone Cache:</strong> Service worker caching keeps bioacoustic dictionaries and offline annotation queues available in remote sandbars.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">✓</span>
+              <span><strong>Native Android App Launcher:</strong> App appears in the Android application tray with adaptive maskable icon geometry.</span>
+            </li>
+          </ul>
+
+          <div class="mt-8 flex flex-wrap items-center gap-4">
+            <a
+              href="https://ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app"
+              target="_blank"
+              rel="noreferrer"
+              class="px-5 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition flex items-center gap-2"
+            >
+              <span>Open in Chrome to Install</span>
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+            </a>
+            <a
+              href="/manifest.json"
+              target="_blank"
+              class="px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 font-mono text-xs transition"
+            >
+              View manifest.json
+            </a>
+          </div>
+        </div>
+
+        <!-- Visual Installation Card -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center gap-3 pb-4 border-b border-slate-800">
+            <div class="w-10 h-10 rounded-lg bg-emerald-950 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </div>
+            <div>
+              <div class="font-bold text-white text-sm">Gharial ISPA WebAPK</div>
+              <div class="text-xs text-slate-400">Package: org.wildernessdojo.gharial.ispa</div>
+            </div>
+            <span class="ml-auto px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-950 text-emerald-400 border border-emerald-800">v1.0.0</span>
+          </div>
+
+          <div class="py-5 space-y-4 text-xs text-slate-300">
+            <div class="p-3 rounded-lg bg-slate-950/80 border border-slate-800/80 font-mono space-y-1">
+              <div class="text-slate-500">// Chromium WebAPK Spec Verification</div>
+              <div><span class="text-emerald-400">display:</span> "standalone"</div>
+              <div><span class="text-emerald-400">icons:</span> 192x192, 512x512, maskable</div>
+              <div><span class="text-emerald-400">service_worker:</span> workbox-precaching-active</div>
+              <div><span class="text-emerald-400">start_url:</span> "/"</div>
+            </div>
+
+            <p class="text-slate-400 text-xs">
+              On Chrome for Android, tap the three dots in the upper right, then choose <strong>"Install app"</strong> to automatically mint and install the WebAPK on your device.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Docker Container Deployment Section -->
+  <section id="docker" class="py-16 border-b border-slate-800 bg-slate-900/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="text-sky-400 text-xs font-mono font-bold tracking-widest uppercase">Containerized Edge Deployment</span>
+        <h2 class="text-3xl font-bold text-white mt-1">Docker & Docker Compose</h2>
+        <p class="text-sm text-slate-300 mt-2">
+          Run the full-stack Gharial ISPA telemetry workbench anywhere with a single command &mdash; whether on field station Intel NUCs, Raspberry Pi edge devices, or cloud servers.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Option 1: Docker CLI -->
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+              <h3 class="font-bold text-white text-sm">Docker Run (One-liner)</h3>
+            </div>
+            <span class="text-xs font-mono text-slate-500">Standalone</span>
+          </div>
+
+          <div class="bg-slate-950 p-3.5 rounded-lg border border-slate-800 font-mono text-xs text-emerald-300 overflow-x-auto">
+            <code>docker build -t gharial-ispa:latest .<br><br>
+docker run -d \<br>
+&nbsp;&nbsp;-p 3000:3000 \<br>
+&nbsp;&nbsp;--name gharial-sparrow \<br>
+&nbsp;&nbsp;-e GEMINI_API_KEY="your-gemini-key" \<br>
+&nbsp;&nbsp;gharial-ispa:latest</code>
+          </div>
+
+          <p class="text-xs text-slate-400 mt-4">
+            Container binds to port <code class="text-slate-200">3000</code> and executes health checks against <code class="text-slate-200">/api/health</code> automatically.
+          </p>
+        </div>
+
+        <!-- Option 2: Docker Compose -->
+        <div class="bg-slate-900 rounded-xl border border-slate-800 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <h3 class="font-bold text-white text-sm">Docker Compose</h3>
+            </div>
+            <span class="text-xs font-mono text-slate-500">Multi-stage</span>
+          </div>
+
+          <div class="bg-slate-950 p-3.5 rounded-lg border border-slate-800 font-mono text-xs text-emerald-300 overflow-x-auto">
+            <code># Clone and start with docker compose<br>
+git clone https://github.com/bheemaiah/gharial-ispa-sparrow-rlhf.git<br>
+cd gharial-ispa-sparrow-rlhf<br><br>
+docker compose up -d --build</code>
+          </div>
+
+          <p class="text-xs text-slate-400 mt-4">
+            Pre-configured with Alpine Node 22 runtime, production asset minification, and automatic container restart policies.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCBT Research Partner Section -->
+  <section id="mcbt" class="py-16 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-br from-slate-900 to-emerald-950/40 p-8 rounded-2xl border border-emerald-900/40">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+          <div class="lg:col-span-2">
+            <span class="text-emerald-400 text-xs font-mono font-bold uppercase tracking-wider">Field Research Foundation</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Madras Crocodile Bank Trust (MCBT)</h2>
+            <p class="text-sm text-slate-300 mt-3 leading-relaxed">
+              Founded in 1976 by Romulus Whitaker and Zai Whitaker, the <strong>Madras Crocodile Bank Trust and Centre for Herpetology (MCBT)</strong> in Mahabalipuram, Tamil Nadu is one of the premier crocodilian conservation and captive breeding institutions in the world.
+            </p>
+            <p class="text-sm text-slate-300 mt-2 leading-relaxed">
+              Under the bioacoustic research initiative proposed by <strong>Dr. Bheemaiah Anil Kumar</strong>, multi-channel hydrophone arrays situated across MCBT's deep lagoons monitor the reproductive choruses and infrasonic communication of captive gharials to aid riverine reintroduction and wild population monitoring.
+            </p>
+            <div class="mt-4 flex items-center gap-4 text-xs font-mono text-emerald-400">
+              <span>Coordinates: 12.7563°N 80.2415°E</span>
+              <span>•</span>
+              <a href="https://madrascrocodilebank.org" target="_blank" rel="noreferrer" class="underline hover:text-emerald-300">madrascrocodilebank.org</a>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 text-center">
+            <div class="text-xs text-slate-400 uppercase tracking-widest font-mono">Lead Research Investigator</div>
+            <div class="text-lg font-bold text-white mt-1">Dr. Bheemaiah Anil Kumar</div>
+            <div class="text-xs text-emerald-400 mt-0.5">Bioacoustic AI & Crocodilian Ethology</div>
+            <div class="text-[11px] text-slate-500 mt-2">IIT Madras Alumni &bull; Wilderness Dojo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-10 bg-slate-950 text-slate-500 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <span class="text-slate-300 font-semibold">Wilderness Dojo</span> &bull; 
+        <span>Gharial ISPA Sparrow RLHF Project</span>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="https://ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app" target="_blank" class="text-emerald-400 hover:underline">Live Cloud App</a>
+        <a href="https://github.com/bheemaiah/gharial-ispa-sparrow-rlhf" target="_blank" class="hover:text-slate-300">GitHub Repo</a>
+        <a href="https://madrascrocodilebank.org" target="_blank" class="hover:text-slate-300">MCBT Trust</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Web Audio Synthesizer Script for Landing Page Audio Previews -->
+  <script>
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playAcoustic(token) {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        if (token === 'POP') {
+          // Cavitation Pop
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(160, now);
+          osc.frequency.exponentialRampToValueAtTime(45, now + 0.12);
+
+          gain.gain.setValueAtTime(0.01, now);
+          gain.gain.linearRampToValueAtTime(0.7, now + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.16);
+        } else if (token === 'SAV') {
+          // Infrasound Torso Vibration
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(32, now);
+          osc.frequency.linearRampToValueAtTime(14, now + 0.5);
+
+          gain.gain.setValueAtTime(0.01, now);
+          gain.gain.linearRampToValueAtTime(0.6, now + 0.15);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.85);
+        } else if (token === 'BR') {
+          // Resonant Bellow Roar
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sawtooth';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(180, now);
+          osc1.frequency.linearRampToValueAtTime(120, now + 0.7);
+          osc2.frequency.setValueAtTime(90, now);
+
+          gain.gain.setValueAtTime(0.01, now);
+          gain.gain.linearRampToValueAtTime(0.5, now + 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.85);
+          osc2.stop(now + 0.85);
+        } else if (token === 'JQU') {
+          // Juvenile Contact Quack
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(1250, now);
+          osc.frequency.linearRampToValueAtTime(1050, now + 0.08);
+
+          gain.gain.setValueAtTime(0.01, now);
+          gain.gain.linearRampToValueAtTime(0.4, now + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.13);
+        } else if (token === 'HAP') {
+          // Head Slap Shockwave
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.exponentialRampToValueAtTime(35, now + 0.2);
+
+          gain.gain.setValueAtTime(0.8, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.26);
+        } else if (token === 'PIP') {
+          // Hatching Pip
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(2200, now);
+          osc.frequency.exponentialRampToValueAtTime(2600, now + 0.05);
+
+          gain.gain.setValueAtTime(0.01, now);
+          gain.gain.linearRampToValueAtTime(0.35, now + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        }
+      } catch (e) {
+        console.warn('Audio playback error:', e);
+      }
+    }
+  </script>
+</body>
+</html>

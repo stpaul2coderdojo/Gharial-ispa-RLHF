@@ -3,11 +3,21 @@
 > **Interspecies Phonetic Alphabet (ISPA) Annotation & RLHF Feedback Pipeline for Critically Endangered Gharials (*Gavialis gangeticus*)**  
 > *Developed in collaboration with the Madras Crocodile Bank Trust and Centre for Herpetology (MCBT), Mahabalipuram, Tamil Nadu & Dr. Bheemaiah Anil Kumar Bioacoustics Lab.*
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19.0-61dafb.svg)](https://react.dev/)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-38b2ac.svg)](https://tailwindcss.com/)
-[![Gemini](https://img.shields.io/badge/Gemini_API-2.5_Flash-orange.svg)](https://ai.google.dev/)
+[![Live Cloud Build](https://img.shields.io/badge/Live_Cloud_Build-Google_Cloud_Run-emerald?style=for-the-badge&logo=googlecloud)](https://ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app)
+[![Website: wildernessdojo.github.io](https://img.shields.io/badge/Website-wildernessdojo.github.io-blue?style=for-the-badge&logo=github)](https://wildernessdojo.github.io)
+[![WebAPK](https://img.shields.io/badge/WebAPK-Android_PWA-green?style=for-the-badge&logo=android)](https://ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)](https://github.com/bheemaiah/gharial-ispa-sparrow-rlhf)
+
+---
+
+## Live Deployments & Web Access
+
+| Resource | URL | Description |
+| :--- | :--- | :--- |
+| **Live Cloud Build (Production)** | [ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app](https://ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app) | Real-time bioacoustic annotation workbench running on Google Cloud Run |
+| **Development Cloud URL** | [ais-dev-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app](https://ais-dev-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app) | Active continuous integration preview endpoint |
+| **Official Website & Landing Page** | [wildernessdojo.github.io](https://wildernessdojo.github.io) | Public educational landing page & interactive ISPA sound synthesizer (served from `/docs`) |
+| **Local Preview of Landing Page** | [http://localhost:3000/landing](http://localhost:3000/landing) | Built-in Express route rendering `docs/index.html` |
 
 ---
 
@@ -119,6 +129,61 @@ Monitoring stations are situated at the **Madras Crocodile Bank Trust (MCBT)** i
    npm run build
    npm start
    ```
+
+---
+
+## Docker & Containerized Deployment
+
+A production-grade multi-stage `Dockerfile` and `docker-compose.yml` are included in the repository for one-command deployment.
+
+### Quick Run with Docker Compose
+
+```bash
+# Clone the repository
+git clone https://github.com/bheemaiah/gharial-ispa-sparrow-rlhf.git
+cd gharial-ispa-sparrow-rlhf
+
+# Launch the containerized application
+docker compose up -d --build
+```
+The application will be accessible at [http://localhost:3000](http://localhost:3000) with automatic healthchecks against `/api/health`.
+
+### Standalone Docker Build & Run
+
+```bash
+# Build the production image
+docker build -t gharial-ispa:latest .
+
+# Run the container with environment variables
+docker run -d \
+  -p 3000:3000 \
+  --name gharial-sparrow-rlhf \
+  -e GEMINI_API_KEY="your-gemini-api-key" \
+  gharial-ispa:latest
+```
+
+---
+
+## Android WebAPK & PWA Minting
+
+The application meets all Chromium criteria for **automatic WebAPK generation** via Google Play's WebAPK minting service on Android devices:
+
+- **Web App Manifest**: Configured at `/manifest.json` with `id: "/"`, `display: "standalone"`, and high-resolution icons.
+- **Service Worker**: Precaches UI assets, ISPA token dictionaries, and spectrogram renderers for offline operation in field enclosures.
+- **Adaptive Maskable Icons**: 192&times;192 and 512&times;512 PNG assets generated with safe-zone margins (`/public/pwa-maskable-512x512.png`).
+- **In-App Installation**: Tap the **Install WebAPK** button in the application header or select "Install app" in Google Chrome for Android.
+
+---
+
+## GitHub Pages Landing Page (`wildernessdojo.github.io`)
+
+The public website and interactive bioacoustic landing page is located in [`docs/index.html`](docs/index.html):
+
+- **Deployment Source**: Standard GitHub Pages directory (`/docs` branch configuration or root of the `wildernessdojo.github.io` repository).
+- **Interactive Bioacoustic Synthesizer**: Visitors can audition synthesized gharial bubble-pops (`POP`), infrasound vibrations (`SAV`), and roar-bellows (`BR`) directly in the browser via the Web Audio API.
+- **Direct Links**: Immediate launch buttons linking directly to the live Cloud Run application:
+  `https://ais-pre-mmuuwcpohdumz46mslp3qu-219346993343.asia-southeast1.run.app`.
+- **Local Testing**: Preview the landing page at [http://localhost:3000/landing](http://localhost:3000/landing) when running the local server.
 
 ---
 

@@ -1,0 +1,49 @@
+{
+  "id": "/",
+  "name": "Gharial ISPA Sparrow RLHF",
+  "short_name": "Gharial ISPA",
+  "description": "RLHF annotation tool for Gharial Interspecies Phonetic Alphabet (ISPA) with Microsoft Sparrow telemetry at Madras Crocodile Bank Trust (MCBT).",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#022c22",
+  "theme_color": "#064e3b",
+  "categories": ["science", "education", "utilities"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Sparrow Bioacoustic Feed",
+      "short_name": "Feed",
+      "description": "Monitor live MCBT hydrophone and video stream",
+      "url": "/?view=stream",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "ISPA Composer",
+      "short_name": "Composer",
+      "description": "Synthesize gharial phoneme sequences",
+      "url": "/?view=composer",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

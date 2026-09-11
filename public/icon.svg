@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022c22" />
+      <stop offset="50%" stop-color="#064e3b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="gharaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+
+  <!-- Outer Tech Border Ring -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#10b981" stroke-width="3" stroke-opacity="0.25" stroke-dasharray="8 6" />
+  <circle cx="256" cy="256" r="185" fill="none" stroke="#34d399" stroke-width="2" stroke-opacity="0.4" />
+
+  <!-- Bioacoustic Hydrophone Sonar Waves -->
+  <path d="M 330 190 A 80 80 0 0 1 330 322" fill="none" stroke="#34d399" stroke-width="7" stroke-linecap="round" opacity="0.6" filter="url(#glow)" />
+  <path d="M 365 160 A 130 130 0 0 1 365 352" fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" opacity="0.45" />
+  <path d="M 400 130 A 180 180 0 0 1 400 382" fill="none" stroke="#059669" stroke-width="5" stroke-linecap="round" opacity="0.3" />
+
+  <!-- Gharial Profile Silhouette -->
+  <!-- Narrow elongated snout, head, and ghara -->
+  <g transform="translate(18, 12)">
+    <!-- Body & Back Scutes Ridge -->
+    <path d="M 80 320 Q 140 285 210 270 Q 260 260 280 255" fill="none" stroke="#065f46" stroke-width="12" stroke-linecap="round" />
+    <path d="M 120 288 L 132 272 L 144 288 L 156 270 L 168 288 L 180 268 L 192 288" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" />
+
+    <!-- Head & Elongated Mandible -->
+    <!-- Upper jaw reaching forward -->
+    <path d="M 170 260 C 210 252 245 235 285 235 L 375 235 C 385 235 392 238 395 243 C 392 248 385 250 375 250 L 290 253 C 250 256 220 270 180 280 Z" fill="url(#accentGrad)" />
+
+    <!-- Lower jaw -->
+    <path d="M 195 272 L 290 260 L 370 258 C 378 258 382 263 378 266 L 285 274 C 250 282 225 295 195 298 Z" fill="#059669" opacity="0.9" />
+
+    <!-- Ghara Narial Bulb (Male Cartilaginous Resonator at tip of snout) -->
+    <circle cx="388" cy="237" r="14" fill="url(#gharaGrad)" filter="url(#glow)" />
+    <circle cx="390" cy="235" r="5" fill="#fef3c7" />
+
+    <!-- Gharial Eye (Raised Supraorbital Ridge) -->
+    <ellipse cx="242" cy="233" rx="9" ry="7" fill="#022c22" stroke="#34d399" stroke-width="2" />
+    <circle cx="243" cy="233" r="3" fill="#fef08a" />
+
+    <!-- Soundwave Impulse emitting from Ghara -->
+    <path d="M 408 237 Q 418 230 422 237 Q 426 244 436 237" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" />
+  </g>
+
+  <!-- ISPA & MCBT Label Sub-badge -->
+  <g transform="translate(136, 385)">
+    <rect x="0" y="0" width="240" height="42" rx="21" fill="#0f172a" fill-opacity="0.85" stroke="#10b981" stroke-width="1.5" />
+    <text x="120" y="26" fill="#6ee7b7" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" letter-spacing="3" text-anchor="middle">ISPA • SPARROW</text>
+  </g>
+</svg>

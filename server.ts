@@ -185,6 +185,12 @@ app.post('/api/rlhf/export', (req, res) => {
   res.json(manifest);
 });
 
+// Serve Wilderness Dojo landing page for GitHub Pages preview
+app.get(['/landing', '/wildernessdojo', '/docs'], (req, res) => {
+  const landingPath = path.join(process.cwd(), 'docs', 'index.html');
+  res.sendFile(landingPath);
+});
+
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
