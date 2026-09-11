@@ -1,0 +1,6 @@
+{
+  "name": "Gharial ISPA Sparrow RLHF",
+  "description": "RLHF annotation tool for the Gharial Interspecies Phonetic Alphabet (ISPA) integrating Microsoft Sparrow bioacoustic streaming, MegaDetector Acoustic tagging, and human-in-the-loop feedback.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
