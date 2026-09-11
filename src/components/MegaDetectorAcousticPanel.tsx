@@ -53,7 +53,7 @@ export const MegaDetectorAcousticPanel: React.FC<MegaDetectorAcousticPanelProps>
       <div className="flex-1 overflow-y-auto divide-y divide-slate-800/80 p-2 space-y-1.5 max-h-[360px]">
         {detections.length === 0 ? (
           <div className="p-8 text-center text-xs text-slate-500 italic">
-            No acoustic events logged yet. Transmit an ISPA sequence from above or trigger a sanctuary call from the video monitor to run MegaDetector Acoustic.
+            No acoustic events logged yet. Transmit an ISPA sequence from above or trigger an enclosure acoustic call from the video monitor to run MegaDetector Acoustic.
           </div>
         ) : (
           detections.map((d) => {

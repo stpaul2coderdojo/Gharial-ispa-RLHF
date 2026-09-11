@@ -29,7 +29,7 @@ export const RLHFFeedbackModal: React.FC<RLHFFeedbackModalProps> = ({
   const [customBehavior, setCustomBehavior] = useState<string>('');
   const [rewardScore, setRewardScore] = useState<number>(0.8);
   const [callerIdentity, setCallerIdentity] = useState<string>(originalDef?.callerIdentity || 'Adult Male');
-  const [environmentalNotes, setEnvironmentalNotes] = useState<string>(`Chambal hydrophone 3.8m; river flow 0.62m/s; ${streamLocation}`);
+  const [environmentalNotes, setEnvironmentalNotes] = useState<string>(`Madras Crocodile Bank Trust (MCBT) hydrophone array; water temp 28.2°C; ${streamLocation}`);
   const [reviewerNotes, setReviewerNotes] = useState<string>('');
   const [geminiAnalysis, setGeminiAnalysis] = useState<any>(null);
   const [isLoadingGemini, setIsLoadingGemini] = useState<boolean>(false);
@@ -39,6 +39,7 @@ export const RLHFFeedbackModal: React.FC<RLHFFeedbackModalProps> = ({
     setBehavior(detection.predictedBehavior);
     setRewardScore(detection.confidence > 0.8 ? 1.0 : 0.6);
     setCallerIdentity(originalDef?.callerIdentity || 'Adult Male');
+    setEnvironmentalNotes(`Madras Crocodile Bank Trust (MCBT) bioacoustic sensor array; ${streamLocation}`);
     setGeminiAnalysis(null);
 
     // Call server-side Gemini bioacoustic analysis

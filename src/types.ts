@@ -45,6 +45,7 @@ export interface SparrowStreamChannel {
   location: string;
   subLocation: string;
   habitatType: string;
+  coordinates: string;
   hydrophoneStatus: 'ACTIVE' | 'CALIBRATING' | 'STANDBY';
   videoStatus: 'STREAMING' | 'BUFFERING' | 'OFFLINE';
   waterTempC: number;

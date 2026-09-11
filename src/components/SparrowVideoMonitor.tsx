@@ -357,12 +357,13 @@ export const SparrowVideoMonitor: React.FC<SparrowVideoMonitorProps> = ({
         />
 
         {/* Video OSD Overlays */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1 text-[11px] font-mono text-emerald-400 bg-black/60 backdrop-blur-sm px-2.5 py-1.5 rounded border border-emerald-500/30">
+        <div className="absolute top-3 left-3 flex flex-col gap-1 text-[11px] font-mono text-emerald-400 bg-black/60 backdrop-blur-sm px-2.5 py-1.5 rounded border border-emerald-500/30 max-w-[85%]">
           <div className="flex items-center gap-2">
-            <Radio className="w-3 h-3 text-red-400 animate-pulse" />
-            <span>CHAMBAL SANCTUARY 26.6841&deg;N 78.7845&deg;E</span>
+            <Radio className="w-3 h-3 text-red-400 animate-pulse shrink-0" />
+            <span className="uppercase font-semibold truncate">{channel.name}</span>
           </div>
           <div className="text-slate-400 text-[10px] flex items-center gap-3">
+            <span>{channel.coordinates || '12.7563°N 80.2415°E'}</span>
             <span>DEPTH: 3.8m</span>
             <span>TEMP: {channel.waterTempC}&deg;C</span>
             <span>TIME: {streamTime}</span>
@@ -427,11 +428,11 @@ export const SparrowVideoMonitor: React.FC<SparrowVideoMonitorProps> = ({
           />
         </div>
 
-        {/* Quick Sanctuary Trigger Simulation */}
+        {/* Quick Acoustic Trigger Simulation */}
         <div className="bg-slate-900 rounded-lg p-2.5 border border-slate-800 flex flex-col justify-between">
           <div>
             <div className="text-[11px] font-semibold text-slate-300 mb-1 flex items-center justify-between">
-              <span>Trigger Sanctuary Call</span>
+              <span>Trigger Enclosure Call</span>
               <span className="text-[10px] text-slate-500 font-normal">Sparrow Audio Inject</span>
             </div>
             <p className="text-[10px] text-slate-400 mb-2 leading-relaxed">

@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              Interspecies Phonetic Alphabet Annotation &bull; Dr. Bheemaiah Anil Kumar Proposal
+              Interspecies Phonetic Alphabet Annotation &bull; Madras Crocodile Bank Trust (MCBT) &bull; Dr. Bheemaiah Anil Kumar Proposal
             </p>
           </div>
         </div>

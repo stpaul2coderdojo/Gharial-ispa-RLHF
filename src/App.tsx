@@ -34,8 +34,8 @@ export default function App() {
   // MegaDetector Detections
   const [detections, setDetections] = useState<MegaDetectorDetection[]>([
     {
-      id: 'det-chambal-001',
-      streamId: 'chambal-cam-04',
+      id: 'det-mcbt-001',
+      streamId: 'mcbt-gharial-lagoon',
       timestamp: 14.2,
       token: 'POP',
       predictedBehavior: 'Adult male advertisement; individually distinctive',
@@ -52,8 +52,8 @@ export default function App() {
       modelConfidenceCategory: 'High',
     },
     {
-      id: 'det-chambal-002',
-      streamId: 'chambal-cam-04',
+      id: 'det-mcbt-002',
+      streamId: 'mcbt-gharial-lagoon',
       timestamp: 15.6,
       token: 'SAV',
       predictedBehavior: 'Precedes display; infrasonic torso vibration',
@@ -70,8 +70,8 @@ export default function App() {
       modelConfidenceCategory: 'High',
     },
     {
-      id: 'det-chambal-003',
-      streamId: 'chambal-cam-04',
+      id: 'det-mcbt-003',
+      streamId: 'mcbt-gharial-lagoon',
       timestamp: 17.2,
       token: 'BR',
       predictedBehavior: 'Long-distance breeding advertisement',
@@ -95,7 +95,7 @@ export default function App() {
   const [feedbackHistory, setFeedbackHistory] = useState<RLHFFeedbackItem[]>([
     {
       id: 'rlhf-001',
-      detectionId: 'det-chambal-001',
+      detectionId: 'det-mcbt-001',
       detectionTimestamp: '2026-09-11T03:45:00.000Z',
       originalSequence: ['POP'],
       validatedSequence: ['POP'],
@@ -104,7 +104,7 @@ export default function App() {
       rewardScore: 1.0,
       reviewStatus: 'APPROVED',
       callerIdentityConfirmed: 'Alpha Adult Male with Ghara',
-      environmentalNotes: 'Chambal deep pool hydrophone; sharp acoustic impulse cavitation',
+      environmentalNotes: 'Madras Crocodile Bank Trust (MCBT) lagoon hydrophone; sharp acoustic impulse cavitation',
       feedbackNotes: 'Confirmed individually distinctive hydrophone signature',
       confidenceDelta: 0.04,
       reviewedBy: 'Dr. Bheemaiah Anil Kumar Lab',
@@ -112,7 +112,7 @@ export default function App() {
     },
     {
       id: 'rlhf-002',
-      detectionId: 'det-chambal-002',
+      detectionId: 'det-mcbt-002',
       detectionTimestamp: '2026-09-11T03:45:02.000Z',
       originalSequence: ['SAV'],
       validatedSequence: ['SAV'],
@@ -121,7 +121,7 @@ export default function App() {
       rewardScore: 1.0,
       reviewStatus: 'APPROVED',
       callerIdentityConfirmed: 'Alpha Adult Male with Ghara',
-      environmentalNotes: 'Water dance ripples observed bouncing off scutes',
+      environmentalNotes: 'Water dance ripples observed bouncing off scutes at MCBT sandbank',
       feedbackNotes: 'Infrasonic energy confirmed <20Hz',
       confidenceDelta: 0.12,
       reviewedBy: 'Dr. Bheemaiah Anil Kumar Lab',
@@ -235,7 +235,7 @@ export default function App() {
     }, tokensToTransmit.length * 600 + 400);
   };
 
-  // Simulate single sanctuary call
+  // Simulate single enclosure call
   const handleSimulateDetection = (token: ISPATokenId) => {
     bioacousticSynth.playToken(token);
     setActiveTokenOnStream(token);
@@ -247,7 +247,7 @@ export default function App() {
       streamId: selectedChannel.id,
       timestamp: Number((Math.random() * 15 + 30).toFixed(1)),
       token,
-      predictedBehavior: def?.behavioralContext || 'Sanctuary acoustic activity',
+      predictedBehavior: def?.behavioralContext || 'MCBT bioacoustic activity',
       confidence: Number((0.85 + Math.random() * 0.13).toFixed(2)),
       acousticFeatures: {
         peakFreqHz: def?.acousticDescriptor.dominantFreq || 350,

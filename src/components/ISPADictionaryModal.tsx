@@ -47,7 +47,7 @@ export const ISPADictionaryModal: React.FC<ISPADictionaryModalProps> = ({
                 Gharial Interspecies Phonetic Alphabet (ISPA) Repertoire
               </h2>
               <p className="text-xs text-slate-400">
-                Draft Annotation Standard for Microsoft Sparrow &bull; Dr. Bheemaiah Anil Kumar Proposal
+                Draft Annotation Standard for Microsoft Sparrow &bull; Madras Crocodile Bank Trust (MCBT) &bull; Dr. Bheemaiah Anil Kumar Proposal
               </p>
             </div>
           </div>

@@ -143,8 +143,8 @@ app.post('/api/rlhf/export', (req, res) => {
 
   const manifest = {
     schemaVersion: 'microsoft.sparrow.bioacoustics.rlhf.v1',
-    datasetName: 'Gharial-ISPA-Chambal-RLHF-Corpus',
-    contributor: 'Dr. Bheemaiah Anil Kumar Bioacoustic Lab & Sparrow HITL Pipeline',
+    datasetName: 'Gharial-ISPA-MCBT-RLHF-Corpus',
+    contributor: 'Madras Crocodile Bank Trust (MCBT) & Dr. Bheemaiah Anil Kumar Bioacoustic Lab',
     exportedAt,
     streamId: streamId || 'all-streams',
     totalSamples: Array.isArray(feedbackItems) ? feedbackItems.length : 0,
