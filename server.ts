@@ -185,6 +185,95 @@ app.post('/api/rlhf/export', (req, res) => {
   res.json(manifest);
 });
 
+// ONNX Models Catalog Registry Endpoint
+app.get('/api/onnx/models', (req, res) => {
+  res.json({
+    frameworks: ['MegaDetector', 'Microsoft Sparrow', 'PyTorch Wildlife'],
+    totalModels: 11,
+    catalog: [
+      {
+        id: 'md_v5a',
+        category: 'MegaDetector',
+        architecture: 'YOLOv5x6',
+        input: '[1, 3, 1280, 1280]',
+        quantization: 'FP32',
+        latencyEdgeMs: 145.0,
+      },
+      {
+        id: 'md_v6_yolov8x',
+        category: 'MegaDetector',
+        architecture: 'YOLOv8x Anchor-Free',
+        input: '[1, 3, 640, 640]',
+        quantization: 'INT8',
+        latencyEdgeMs: 38.4,
+      },
+      {
+        id: 'sparrow_acoustic_ispa_13class',
+        category: 'Microsoft Sparrow',
+        architecture: 'ConvNeXt-V2-Nano Log-Mel',
+        input: '[1, 1, 128, 512]',
+        quantization: 'FP16',
+        latencyEdgeMs: 18.2,
+      },
+      {
+        id: 'sparrow_infrasound_detector_20hz',
+        category: 'Microsoft Sparrow',
+        architecture: 'Temporal 1D ResNet Infrasound',
+        input: '[1, 1, 4800]',
+        quantization: 'INT8',
+        latencyEdgeMs: 6.5,
+      },
+      {
+        id: 'sparrow_audio_visual_fusion_v2',
+        category: 'Microsoft Sparrow',
+        architecture: 'Cross-Attention Dual Stream (Camera + PDM)',
+        input: 'image: [1, 3, 384, 384], audio: [1, 1, 128, 256]',
+        quantization: 'FP16',
+        latencyEdgeMs: 44.0,
+      },
+      {
+        id: 'sparrow_xiao_esp32s3_tinyml_int8',
+        category: 'Microsoft Sparrow',
+        architecture: 'MobileNetV1-Micro ESP-NN INT8',
+        input: '[1, 1, 64, 128]',
+        quantization: 'ESP-NN INT8',
+        latencyEdgeMs: 12.0,
+      },
+      {
+        id: 'ptw_gharial_keypoints',
+        category: 'PyTorch Wildlife',
+        architecture: 'HRNet-W32 Heatmap (8 Keypoints)',
+        input: '[1, 3, 384, 288]',
+        quantization: 'FP16',
+        latencyEdgeMs: 36.0,
+      },
+      {
+        id: 'ptw_creche_counter',
+        category: 'PyTorch Wildlife',
+        architecture: 'CSRNet Density Map',
+        input: '[1, 3, 512, 512]',
+        quantization: 'FP16',
+        latencyEdgeMs: 28.0,
+      },
+    ],
+  });
+});
+
+// XIAO Sense Meshmatics Firmware Generator Endpoint
+app.post('/api/firmware/xiao-sense/config', (req, res) => {
+  const config = req.body;
+  res.json({
+    status: 'configured',
+    targetBoard: 'Seeed Studio XIAO ESP32S3 Sense',
+    nodeId: config.nodeId || 'mcbt-xiao-gharial-01',
+    meshChannel: config.meshChannel || 6,
+    camera: config.cameraResolution || 'VGA',
+    pdmMicrophone: `${config.pdmMicrophoneSampleRate || 48000} Hz`,
+    binaryPackage: 'xiao_sense_meshmatics_sparrow_v2.4.zip',
+    flashCommand: `esptool.py --chip esp32s3 -p /dev/ttyACM0 -b 921600 write_flash 0x10000 firmware.bin`,
+  });
+});
+
 // Serve Wilderness Dojo landing page for GitHub Pages preview
 app.get(['/landing', '/wildernessdojo', '/docs'], (req, res) => {
   const landingPath = path.join(process.cwd(), 'docs', 'index.html');

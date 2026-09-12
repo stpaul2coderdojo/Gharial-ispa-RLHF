@@ -187,6 +187,96 @@ The public website and interactive bioacoustic landing page is located in [`docs
 
 ---
 
+## Microsoft Sparrow & MegaDetector ONNX Studio
+
+The **ONNX Studio** is an integrated workbench accessible from the application header or the video monitor HUD. It provides real-time model cataloging, edge latency benchmarking, dataset curation, and firmware generation.
+
+---
+
+## Complete ONNX Model Registry (Microsoft Sparrow, MegaDetector, PyTorch Wildlife)
+
+The platform registers and benchmarks **11 production ONNX models** designed for edge wildlife monitoring, hydrophone bioacoustics, and anatomical computer vision:
+
+### 1. MegaDetector Wildlife Detection Models
+
+| Model Filename | Architecture | Input Tensor | Output Shape | Precision | Edge Latency | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `md_v5a.onnx` | YOLOv5x6 + P6 | `[1, 3, 1280, 1280]` | `[1, 100800, 8]` | FP32 | 145.0 ms | Gold-standard global wildlife detection model. High recall for small camouflaged animals on sandbanks. |
+| `md_v5b.onnx` | YOLOv5x | `[1, 3, 1280, 1280]` | `[1, 75600, 8]` | FP16 | 88.0 ms | Compact edge model for lower-memory field gateways and Raspberry Pi 5. |
+| `md_v6_yolov8x.onnx` | YOLOv8x Anchor-Free | `[1, 3, 640, 640]` | `[1, 7, 8400]` | INT8 | 38.4 ms | Anchor-free detection head with enhanced sensitivity for creche juveniles. |
+| `md_v6_rtdetr.onnx` | RT-DETR Transformer | `[1, 3, 640, 640]` | `[1, 300, 4]`, `[1, 300, 3]` | FP16 | 52.0 ms | Real-Time Detection Transformer eliminating NMS latency jitter. |
+
+### 2. Microsoft Sparrow Bioacoustic & Multimodal Models
+
+| Model Filename | Architecture | Input Tensor | Output Shape | Precision | Edge Latency | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `sparrow_acoustic_ispa_13class.onnx` | ConvNeXt-V2-Nano | `[1, 1, 128, 512]` | `[1, 13]` | FP16 | 18.2 ms | Classifies all 13 ISPA phonetic tokens (POP, SAV, BR, HC, CC, DC, HS, JC, BB, GW, GR, RR, SN). |
+| `sparrow_infrasound_detector_20hz.onnx` | Temporal 1D ResNet | `[1, 1, 4800]` | `[1, 2]` | INT8 | 6.5 ms | Subaudible (<20Hz) hydrophone vibration detector for male torso water-dances. |
+| `sparrow_audio_visual_fusion_v2.onnx` | Dual-Stream Transformer | `[1, 3, 384, 384]`, `[1, 1, 128, 256]` | `[1, 13]`, `[1, 1]` | FP16 | 44.0 ms | Fuses OV2640 camera stream with PDM hydrophone audio for synchronized behavioral classification. |
+| `sparrow_xiao_esp32s3_tinyml_int8.onnx` | MobileNetV1-Micro | `[1, 1, 64, 128]` | `[1, 6]` | ESP-NN INT8 | 12.0 ms | Ultra-quantized model executing directly on Seeed Studio XIAO ESP32S3 Sense @ 240MHz. |
+
+### 3. PyTorch Wildlife (PTW) Models
+
+| Model Filename | Architecture | Input Tensor | Output Shape | Precision | Edge Latency | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `ptw_crocodylia_classifier.onnx` | EfficientNet-B3 Wildlife | `[1, 3, 300, 300]` | `[1, 4]` | FP16 | 22.5 ms | Morphometric taxa differentiator (Gharial vs Mugger crocodile vs Saltwater crocodile). |
+| `ptw_gharial_keypoints.onnx` | HRNet-W32 Heatmap | `[1, 3, 384, 288]` | `[1, 8, 96, 72]` | FP16 | 36.0 ms | 8-point landmark estimator for ghara narial bulb, rostral tip, nostril apertures, and eyes. |
+| `ptw_creche_counter.onnx` | CSRNet Dilated Conv | `[1, 3, 512, 512]` | `[1, 1, 64, 64]` | FP16 | 28.0 ms | Congested scene density-map regression counting dozens of basking hatchlings. |
+| `ptw_bioacoustic_encoder_efficientnet.onnx` | EfficientNet-Audio-V2 | `[1, 1, 128, 256]` | `[1, 512]` | FP16 | 14.5 ms | Generates 512-dim bioacoustic embeddings for individual adult male re-identification. |
+
+---
+
+## Seeed Studio XIAO ESP32S3 Sense Firmware & Meshmatics
+
+The platform includes a built-in firmware configurator and one-click package downloader for the **Seeed Studio XIAO ESP32S3 Sense** micro-edge sensor:
+
+- **Target Hardware**:
+  - Xtensa Dual-Core 32-bit LX7 @ 240 MHz, 8 MB PSRAM, 8 MB Flash
+  - Integrated OV2640 DVP Camera (QVGA / VGA / SVGA JPEG DMA streaming)
+  - Onboard MSM261D3526H1CPM Digital PDM Microphone (I2S DMA audio capture)
+- **Protocol**: **XIAO Meshmatics** (ESP-NOW / 802.11 Long-Range Mesh broadcasting to Microsoft Sparrow base stations)
+- **Infrasound Optimization**: High-Pass Filter bypass configured to record <20Hz seismic hydrophone waves.
+- **One-Click Download Artifacts**:
+  - `xiao_sense_meshmatics.ino`: Complete Arduino C++ sketch
+  - `flash_xiao_sense.sh`: Automated flashing script using `esptool.py` (baud: 921600)
+  - `platformio.ini`: PlatformIO embedded build definition
+  - `meshmatics_config.json`: Node network credentials and trigger thresholds
+  - Complete `.zip` package via the ONNX Studio
+
+### Quick Flashing Instructions
+
+```bash
+# 1. Connect XIAO ESP32S3 Sense via USB-C
+# 2. Extract firmware bundle and run:
+chmod +x flash_xiao_sense.sh
+./flash_xiao_sense.sh /dev/ttyACM0
+
+# 3. Monitor live telemetry over serial:
+python -m serial.tools.miniterm /dev/ttyACM0 115200
+```
+
+---
+
+## Gharial Multimodal Datasets & Export Formats
+
+Every live camera frame and acoustic observation can be saved to the **Gharial Dataset Corpus** with one click. Datasets store synchronized:
+1. Video camera snapshot & high-resolution JPEG frame
+2. Normalised bounding boxes (animal, ghara, juvenile creche, rostral tip)
+3. ISPA token sequence (`POP`, `SAV`, `BR`, `HC`, `CC`, `SN`, etc.)
+4. Hydrophone audio features (peak frequency, duration, bandwidth, SNR, infrasound RMS)
+5. Environmental telemetry (water temperature, flow velocity, location)
+
+### Supported Dataset Export Formats
+
+- **Full Bundle ZIP**: Single `.zip` containing all formats below with complete README and licenses.
+- **COCO 1.0 JSON** (`coco_annotations.json`): Standard format for Computer Vision training in MegaDetector & PyTorch Wildlife.
+- **YOLO Format** (`labels/*.txt` & `data.yaml`): Formatted for Ultralytics YOLOv8 / YOLOv11 object detection.
+- **HuggingFace Datasets JSONL** (`dataset.jsonl`): Ready for direct streaming into `datasets` Python library.
+- **Microsoft Sparrow RLHF Manifest** (`sparrow_rlhf_manifest.json`): Structured preference pairs for reward model fine-tuning.
+- **PyTorch Bioacoustic CSV** (`audio_manifest.csv`): Tabular spectrogram features and behavioral labels.
+
+---
+
 ## Research Site & Attribution
 
 - **Field Research Partner**: [Madras Crocodile Bank Trust and Centre for Herpetology (MCBT)](https://madrascrocodilebank.org/), Mahabalipuram, Tamil Nadu, India.

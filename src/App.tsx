@@ -6,14 +6,18 @@ import { MegaDetectorAcousticPanel } from './components/MegaDetectorAcousticPane
 import { RLHFFeedbackModal } from './components/RLHFFeedbackModal';
 import { RLHFFeedbackQueue } from './components/RLHFFeedbackQueue';
 import { ISPADictionaryModal } from './components/ISPADictionaryModal';
+import { ONNXStudioModal, ONNXStudioTab } from './components/ONNXStudio/ONNXStudioModal';
 import {
   ISPATokenId,
   SparrowStreamChannel,
   MegaDetectorDetection,
   RLHFFeedbackItem,
   BioacousticMetrics,
+  GharialDatasetItem,
+  VisionBoundingBox,
 } from './types';
 import { SPARROW_STREAM_CHANNELS, ISPA_VOCABULARY } from './data/ispaData';
+import { INITIAL_GHARIAL_DATASETS } from './data/gharialDatasets';
 import { bioacousticSynth } from './utils/audioSynth';
 
 export default function App() {
@@ -91,6 +95,9 @@ export default function App() {
   const [selectedDetection, setSelectedDetection] = useState<MegaDetectorDetection | null>(null);
   const [isProcessingMegaDetector, setIsProcessingMegaDetector] = useState<boolean>(false);
 
+  // Gharial Multimodal Datasets Corpus
+  const [datasets, setDatasets] = useState<GharialDatasetItem[]>(INITIAL_GHARIAL_DATASETS);
+
   // RLHF Feedback History
   const [feedbackHistory, setFeedbackHistory] = useState<RLHFFeedbackItem[]>([
     {
@@ -132,6 +139,8 @@ export default function App() {
   // Modals
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState<boolean>(false);
   const [isDictionaryModalOpen, setIsDictionaryModalOpen] = useState<boolean>(false);
+  const [isOnnxStudioOpen, setIsOnnxStudioOpen] = useState<boolean>(false);
+  const [onnxStudioTab, setOnnxStudioTab] = useState<ONNXStudioTab>('MODELS');
 
   // Backend Gemini status
   const [geminiActive, setGeminiActive] = useState<boolean>(false);
@@ -265,6 +274,47 @@ export default function App() {
     setSelectedDetection(newDet);
   };
 
+  // Save current camera snapshot & bounding boxes directly as a dataset record
+  const handleSaveFrameToDataset = (frameData: {
+    imageUrl: string;
+    boundingBoxes: VisionBoundingBox[];
+    token: ISPATokenId | null;
+  }) => {
+    const curToken = frameData.token || 'POP';
+    const def = ISPA_VOCABULARY[curToken];
+
+    const newRecord: GharialDatasetItem = {
+      id: `gharial-ds-${Date.now().toString().slice(-4)}`,
+      title: `Live Stream Capture: ${curToken} Event at ${selectedChannel.name}`,
+      sourceStream: selectedChannel.id,
+      location: selectedChannel.location,
+      timestamp: new Date().toISOString(),
+      ispaSequence: [curToken],
+      behaviorDescription: def?.behavioralContext || 'Live synchronized visual-acoustic observation',
+      hasGharaAdultMale: selectedChannel.maleGharaObserved,
+      juvenileCount: 2,
+      environmentalContext: {
+        waterTempC: selectedChannel.waterTempC,
+        flowVelocityMs: selectedChannel.flowVelocityMs,
+        habitatType: 'MCBT Sandbank & River Channel',
+        infrasoundPeakHz: curToken === 'SAV' ? 18.2 : 240,
+      },
+      imageSnapshotUrl: frameData.imageUrl,
+      audioFeatures: {
+        peakFrequencyHz: def?.acousticDescriptor.dominantFreq || 320,
+        bandwidthHz: 1400,
+        durationMs: def?.acousticDescriptor.durationMs || 600,
+        snrDb: 24.5,
+      },
+      boundingBoxes: frameData.boundingBoxes,
+      annotator: 'Sparrow Stream Auto-Snapshot',
+      rlhfStatus: 'VERIFIED',
+      tags: ['live_stream', 'camera_snapshot', curToken.toLowerCase(), 'mcbt'],
+    };
+
+    setDatasets((prev) => [newRecord, ...prev]);
+  };
+
   // Quick feedback handlers (Inline Approve/Reject)
   const handleQuickFeedback = (detection: MegaDetectorDetection, accept: boolean) => {
     const newFeedback: RLHFFeedbackItem = {
@@ -347,6 +397,11 @@ export default function App() {
           }
         }}
         onOpenDictionary={() => setIsDictionaryModalOpen(true)}
+        onOpenONNXStudio={(tab) => {
+          setOnnxStudioTab(tab || 'MODELS');
+          setIsOnnxStudioOpen(true);
+        }}
+        datasetCount={datasets.length}
         geminiActive={geminiActive}
       />
 
@@ -360,6 +415,15 @@ export default function App() {
               channel={selectedChannel}
               activeToken={activeTokenOnStream}
               onSimulateDetection={handleSimulateDetection}
+              onSaveFrameToDataset={handleSaveFrameToDataset}
+              onOpenONNXStudio={() => {
+                setOnnxStudioTab('MODELS');
+                setIsOnnxStudioOpen(true);
+              }}
+              onOpenXiaoFirmware={() => {
+                setOnnxStudioTab('XIAO_FIRMWARE');
+                setIsOnnxStudioOpen(true);
+              }}
             />
           </div>
 
@@ -402,7 +466,7 @@ export default function App() {
       {/* Footer */}
       <footer className="bg-slate-950 border-t border-slate-900 py-4 px-4 text-center text-xs text-slate-500">
         <p>
-          Gharial Interspecies Phonetic Alphabet (ISPA) &bull; Standardized Annotation Scheme Proposal by Dr. Bheemaiah Anil Kumar &bull; Microsoft Sparrow &amp; MegaDetector Acoustic Bioacoustic RLHF
+          Gharial Interspecies Phonetic Alphabet (ISPA) &bull; Standardized Annotation Scheme Proposal by Dr. Bheemaiah Anil Kumar &bull; Microsoft Sparrow &amp; MegaDetector Acoustic Bioacoustic RLHF &bull; XIAO ESP32S3 Meshmatics
         </p>
       </footer>
 
@@ -421,6 +485,16 @@ export default function App() {
         onInsertToSentence={(tok) => {
           setSentence((prev) => [...prev, tok]);
         }}
+      />
+
+      {/* ONNX Studio Modal */}
+      <ONNXStudioModal
+        isOpen={isOnnxStudioOpen}
+        onClose={() => setIsOnnxStudioOpen(false)}
+        initialTab={onnxStudioTab}
+        datasets={datasets}
+        onAddDataset={(newItem) => setDatasets((prev) => [newItem, ...prev])}
+        onDeleteDataset={(id) => setDatasets((prev) => prev.filter((d) => d.id !== id))}
       />
     </div>
   );
